@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas de Ameaças Cibernéticas — índice provisório</title>
+<style>
+  :root{--bg:#14151b;--surface:#20222c;--border:#343747;--text:#e9e7e2;--muted:#a7a9b6;--accent:#e8672f;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.6;}
+  .wrap{max-width:720px;margin:0 auto;padding:3.5rem 1.5rem;}
+  h1{font-size:1.9rem;margin-bottom:.4rem;}
+  p.lede{color:var(--muted);margin-top:0;}
+  .note{
+    background:var(--surface);border:1px solid var(--border);border-radius:6px;
+    padding:1rem 1.2rem;font-size:.92rem;color:var(--muted);margin:1.5rem 0 2.2rem;
+  }
+  .note b{color:var(--text);}
+  ul{list-style:none;padding:0;margin:0;display:grid;gap:.6rem;}
+  li{border:1px solid var(--border);border-radius:6px;background:var(--surface);}
+  li a{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:.9rem 1.1rem;color:var(--text);text-decoration:none;font-size:.98rem;
+  }
+  li a:hover{border-color:var(--accent);}
+  li span.tag{color:var(--muted);font-size:.82rem;font-family:monospace;}
+  li.disabled a{color:var(--muted);pointer-events:none;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Atlas de Ameaças Cibernéticas</h1>
+    <p class="lede">Índice provisório — apenas para testar o servidor localmente.</p>
+    <div class="note">
+      Este <b>não</b> é o índice final do Atlas. No dia da entrega, o professor fornece e mantém o
+      <code>index.html</code> central com as 14 duplas. Este arquivo serve só para validar que o
+      contêiner Apache está servindo os arquivos corretamente durante o desenvolvimento.
+    </div>
+    <ul>
+      <li><a href="dupla03/ransomware.html">Dupla 03 — Ransomware <span class="tag">/dupla03/ransomware.html</span></a></li>
+      <li><a href="dupla03/wiper.html">Dupla 03 — Wiper <span class="tag">/dupla03/wiper.html</span></a></li>
+      <li class="disabled"><a href="#">Dupla 01 — Vírus / Worm <span class="tag">pendente</span></a></li>
+      <li class="disabled"><a href="#">Dupla 02 — Trojan / Backdoor <span class="tag">pendente</span></a></li>
+      <li class="disabled"><a href="#">… demais duplas <span class="tag">pendente</span></a></li>
+    </ul>
+  </div>
+</body>
+</html>
