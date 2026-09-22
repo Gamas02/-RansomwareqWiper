@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-threat="ransomware">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ransomware — Atlas de Ameaças Cibernéticas | Dupla 03</title>
+<meta name="description" content="Ficha técnica sobre Ransomware: histórico, funcionamento, vetores, impactos, detecção, caso real, prevenção e resposta a incidente.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div>
+      <a href="../index.html">← Atlas de Ameaças Cibernéticas</a>
+      <span class="sep">/</span> Dupla 03
+    </div>
+    <div class="siblings">
+      <a class="pill is-current" href="ransomware.html">Ransomware</a>
+      <a class="pill" href="wiper.html">Wiper →</a>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">FICHA DE AMEAÇA · MALWARE DE IMPACTO</p>
+    <h1>Ransomware</h1>
+    <p class="lede">Malware que sequestra o acesso aos próprios dados da vítima, criptografando arquivos e sistemas para extrair pagamento em troca da chave de recuperação.</p>
+
+    <div class="factsheet">
+      <dl>
+        <dt>Categoria</dt>
+        <dd>Malware de extorsão <small>tática: Impact (MITRE ATT&CK)</small></dd>
+      </dl>
+      <dl>
+        <dt>Técnica MITRE</dt>
+        <dd class="mono">T1486 <small>Data Encrypted for Impact</small></dd>
+      </dl>
+      <dl>
+        <dt>Registro relevante</dt>
+        <dd>1989 → auge 2013–hoje <small>modelo RaaS desde ~2016</small></dd>
+      </dl>
+      <dl>
+        <dt>Impacto CIA</dt>
+        <dd>
+          <div class="cia">
+            <div class="bar"><div class="bar-label">Confid.</div><div class="track"><div class="fill" style="width:65%"></div></div></div>
+            <div class="bar"><div class="bar-label">Integr.</div><div class="track"><div class="fill" style="width:45%"></div></div></div>
+            <div class="bar"><div class="bar-label">Disp.</div><div class="track"><div class="fill" style="width:95%"></div></div></div>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</header>
+
+<div class="dossier wrap dossier-grid">
+
+  <aside class="case-nav">
+    <h2>Seções</h2>
+    <ol>
+      <li><a href="#definicao">O que é</a></li>
+      <li><a href="#historico">Histórico</a></li>
+      <li><a href="#funcionamento">Funcionamento</a></li>
+      <li><a href="#vetor">Vetor de entrada</a></li>
+      <li><a href="#impacto">Objetivos e impacto</a></li>
+      <li><a href="#deteccao">Detecção</a></li>
+      <li><a href="#caso">Caso real</a></li>
+      <li><a href="#prevencao">Prevenção</a></li>
+      <li><a href="#resposta">Resposta a incidente</a></li>
+      <li><a href="#comparacao">Ransomware × Wiper</a></li>
+      <li><a href="#referencias">Referências</a></li>
+    </ol>
+  </aside>
+
+  <main>
+
+    <section id="definicao">
+      <h2><span class="num">01</span>O que é?</h2>
+      <p>Ransomware é uma categoria de malware cujo objetivo é tornar dados ou sistemas inacessíveis — normalmente por criptografia — e condicionar a devolução do acesso ao pagamento de um resgate (<em>ransom</em>), geralmente exigido em criptomoeda. No <strong>MITRE ATT&CK</strong>, o comportamento central corresponde à técnica <span class="mono">T1486 – Data Encrypted for Impact</span>, dentro da tática <strong>Impact</strong>.</p>
+      <p class="muted">É importante não confundir a família com o mecanismo: existem worms que carregam ransomware (como o WannaCry) e cavalos de troia usados como porta de entrada para operadores de ransomware — o "ransomware" descreve o objetivo final do ataque (extorsão via indisponibilidade de dados), não a forma como ele chega ao sistema.</p>
+    </section>
+
+    <section id="historico">
+      <h2><span class="num">02</span>Histórico</h2>
+      <p>O primeiro exemplar documentado é o <strong>AIDS Trojan</strong> (ou PC Cyborg), distribuído em 1989 por disquete, que escondia diretórios e cobrava um "aluguel de licença" para restaurá-los. A categoria permaneceu marginal por duas décadas até o surgimento da criptografia assimétrica robusta e dos pagamentos anônimos.</p>
+      <p>A virada ocorreu com o <strong>CryptoLocker</strong> (2013), que popularizou a criptografia com chaves RSA/AES difíceis de quebrar e o pagamento em Bitcoin. A partir de 2016, consolidou-se o modelo <strong>Ransomware-as-a-Service (RaaS)</strong>: desenvolvedores alugam o malware e a infraestrutura para "afiliados" que executam os ataques, dividindo o lucro.</p>
+      <p>Em 2017, o <strong>WannaCry</strong> combinou ransomware com propagação autônoma tipo worm (explorando a vulnerabilidade EternalBlue, no protocolo SMB), infectando mais de 200 mil computadores em cerca de 150 países em poucos dias. Desde ~2019–2020, grupos como o Maze passaram a praticar a <strong>dupla extorsão</strong> (roubar dados antes de criptografar, ameaçando publicá-los), e hoje coexistem a tripla extorsão (adicionando DDoS ou contato direto com clientes da vítima) e grandes ecossistemas de afiliados como LockBit, Conti e DarkSide.</p>
+    </section>
+
+    <section id="funcionamento">
+      <h2><span class="num">03</span>Como funciona</h2>
+      <p>Um ataque de ransomware moderno raramente é instantâneo — costuma ser a etapa final de uma intrusão mais longa:</p>
+      <figure>
+        <div class="diagram-frame">
+          <svg viewBox="0 0 920 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rw-diag-title">
+            <title id="rw-diag-title">Etapas de um ataque de ransomware, do acesso inicial à extorsão</title>
+            <line x1="60" y1="60" x2="860" y2="60" stroke="#343747" stroke-width="2"/>
+            <g font-family="IBM Plex Sans, sans-serif" font-size="12.5" fill="#e9e7e2">
+              <g>
+                <circle cx="60" cy="60" r="9" fill="#20222c" stroke="#e8672f" stroke-width="2.5"/>
+                <text x="60" y="90" text-anchor="middle">Acesso</text>
+                <text x="60" y="106" text-anchor="middle">inicial</text>
+              </g>
+              <g>
+                <circle cx="220" cy="60" r="9" fill="#20222c" stroke="#e8672f" stroke-width="2.5"/>
+                <text x="220" y="90" text-anchor="middle">Execução e</text>
+                <text x="220" y="106" text-anchor="middle">persistência</text>
+              </g>
+              <g>
+                <circle cx="380" cy="60" r="9" fill="#20222c" stroke="#e8672f" stroke-width="2.5"/>
+                <text x="380" y="90" text-anchor="middle">Movimentação</text>
+                <text x="380" y="106" text-anchor="middle">lateral</text>
+              </g>
+              <g>
+                <circle cx="540" cy="60" r="9" fill="#20222c" stroke="#e8672f" stroke-width="2.5"/>
+                <text x="540" y="90" text-anchor="middle">Exfiltração</text>
+                <text x="540" y="106" text-anchor="middle">de dados</text>
+              </g>
+              <g>
+                <circle cx="700" cy="60" r="9" fill="#20222c" stroke="#e8672f" stroke-width="2.5"/>
+                <text x="700" y="90" text-anchor="middle">Criptografia</text>
+                <text x="700" y="106" text-anchor="middle">em massa</text>
+              </g>
+              <g>
+                <circle cx="860" cy="60" r="10" fill="#2a1d16" stroke="#e8672f" stroke-width="3"/>
+                <text x="860" y="90" text-anchor="middle" font-weight="600">Nota de</text>
+                <text x="860" y="106" text-anchor="middle" font-weight="600">resgate</text>
+              </g>
+            </g>
+            <text x="60" y="150" font-family="IBM Plex Mono, monospace" font-size="11" fill="#a7a9b6">phishing · RDP exposto</text>
+            <text x="700" y="150" font-family="IBM Plex Mono, monospace" font-size="11" fill="#a7a9b6" text-anchor="end">T1486 · AES + RSA</text>
+          </svg>
+        </div>
+        <figcaption>Fig. 1 — Ciclo de vida típico de um ataque de ransomware com dupla extorsão.</figcaption>
+      </figure>
+      <ol class="steps">
+        <li><strong>Acesso inicial</strong>: entrada na rede via phishing, credenciais de RDP/VPN expostas ou exploração de vulnerabilidade sem correção.</li>
+        <li><strong>Execução e persistência</strong>: instalação de um dropper, criação de mecanismos para sobreviver a reinicializações e desativação de proteções locais (antivírus, backups automáticos).</li>
+        <li><strong>Descoberta e movimentação lateral</strong>: mapeamento da rede, escalonamento de privilégios e obtenção de credenciais administrativas para atingir o maior número possível de sistemas.</li>
+        <li><strong>Exfiltração de dados</strong> (dupla extorsão): cópia de arquivos sensíveis para servidores do atacante, usada depois como alavanca extra de pressão.</li>
+        <li><strong>Criptografia em massa</strong>: os arquivos são cifrados com um esquema híbrido (uma chave simétrica AES por arquivo, protegida por uma chave RSA do atacante) — corresponde à técnica <span class="mono">T1486</span>.</li>
+        <li><strong>Nota de resgate e extorsão</strong>: um arquivo de instruções é deixado em cada pasta, geralmente apontando para um site na rede Tor com prazo, valor e contador regressivo.</li>
+      </ol>
+    </section>
+
+    <section id="vetor">
+      <h2><span class="num">04</span>Vetor de comprometimento</h2>
+      <ul>
+        <li>E-mails de phishing com anexos maliciosos (macros de documentos) ou links para páginas de coleta de credenciais.</li>
+        <li>Serviços de acesso remoto expostos à internet com credenciais fracas ou reutilizadas (RDP, VPN sem MFA).</li>
+        <li>Exploração de vulnerabilidades conhecidas sem correção aplicada (ex.: EternalBlue/MS17-010, usado pelo WannaCry).</li>
+        <li>Compra de acessos já comprometidos junto a <em>Initial Access Brokers</em> no mercado clandestino.</li>
+        <li>Comprometimento de cadeia de suprimentos de software (ex.: caso Kaseya, 2021, usado para distribuir ransomware REvil a múltiplos clientes de uma vez).</li>
+      </ul>
+    </section>
+
+    <section id="impacto">
+      <h2><span class="num">05</span>Objetivos e impacto</h2>
+      <p>O objetivo primário é <strong>financeiro</strong>: a criptografia dos dados serve como instrumento de coação. Sobre a tríade da segurança da informação:</p>
+      <ul class="card-list">
+        <li><b>Disponibilidade — crítico</b>Arquivos e sistemas ficam inacessíveis até restauração ou pagamento; operações podem parar por dias.</li>
+        <li><b>Confidencialidade — alto (na dupla extorsão)</b>Dados são copiados antes da criptografia e usados como ameaça de vazamento público.</li>
+        <li><b>Integridade — moderado</b>O conteúdo dos arquivos não é alterado em seu significado, mas a criptografia e a renomeação tornam a estrutura original inutilizável sem a chave.</li>
+      </ul>
+    </section>
+
+    <section id="deteccao">
+      <h2><span class="num">06</span>Indicadores e sinais de detecção</h2>
+      <ul>
+        <li>Renomeação em massa de arquivos com novas extensões incomuns em curto intervalo de tempo.</li>
+        <li>Picos anômalos de leitura/escrita em disco, mesmo fora do horário comercial.</li>
+        <li>Execução de comandos que apagam cópias de sombra do Windows (ex.: <span class="mono">vssadmin delete shadows</span>).</li>
+        <li>Aparecimento simultâneo de arquivos de nota de resgate (<span class="mono">README</span>, <span class="mono">.txt</span>/<span class="mono">.html</span>) em múltiplas pastas e compartilhamentos.</li>
+        <li>Tráfego de rede para domínios <span class="mono">.onion</span> ou infraestrutura associada a servidores de comando e controle conhecidos.</li>
+        <li>Conexões SMB anômalas entre estações que normalmente não se comunicam entre si (indício de propagação lateral).</li>
+      </ul>
+    </section>
+
+    <section id="caso">
+      <h2><span class="num">07</span>Caso real</h2>
+      <div class="callout">
+        <span class="tag">Colonial Pipeline · maio de 2021</span>
+        <p>O grupo de ransomware-as-a-service <strong>DarkSide</strong> obteve acesso inicial por meio de uma credencial de VPN antiga, vazada anteriormente e sem proteção por múltiplo fator de autenticação. O ataque criptografou sistemas de faturamento e levou a operadora a paralisar por precaução, de forma preventiva, o maior oleoduto de combustíveis refinados dos Estados Unidos por cerca de seis dias, gerando desabastecimento regional. A empresa pagou cerca de 4,4 milhões de dólares em Bitcoin; parte do valor foi posteriormente recuperada pelo FBI ao rastrear a carteira de criptomoedas do grupo. O caso é amplamente documentado em alertas da CISA e relatórios públicos sobre a resposta federal ao incidente.</p>
+      </div>
+    </section>
+
+    <section id="prevencao">
+      <h2><span class="num">08</span>Como prevenir</h2>
+      <ul>
+        <li><strong>Backups offline e imutáveis</strong>, testados periodicamente, seguindo a regra 3-2-1 (três cópias, duas mídias diferentes, uma fora do local).</li>
+        <li><strong>Autenticação multifator (MFA)</strong> em todo acesso remoto e conta privilegiada.</li>
+        <li>Gestão de correções (<em>patch management</em>) para eliminar vulnerabilidades conhecidas antes que sejam exploradas.</li>
+        <li>Segmentação de rede, limitando o alcance de uma estação comprometida.</li>
+        <li>Soluções de EDR com detecção comportamental, não apenas assinatura de vírus conhecida.</li>
+        <li>Desativação de macros por padrão e filtragem de anexos executáveis em e-mail.</li>
+        <li>Princípio do menor privilégio para contas de usuário e serviço.</li>
+      </ul>
+    </section>
+
+    <section id="resposta">
+      <h2><span class="num">09</span>Como a organização deve responder</h2>
+      <ol class="steps">
+        <li>Isolar imediatamente os sistemas afetados da rede para conter a propagação.</li>
+        <li>Preservar evidências (logs, imagens de disco) antes de qualquer reinstalação.</li>
+        <li>Acionar o plano de resposta a incidentes e a equipe de CSIRT/SOC.</li>
+        <li>Identificar a variante do ransomware e o vetor de entrada explorado.</li>
+        <li>Restaurar os sistemas a partir de backups íntegros e verificados.</li>
+        <li>Não pagar o resgate como prática padrão — recomendação de CISA e FBI, já que o pagamento não garante a recuperação e financia novas operações criminosas.</li>
+        <li>Notificar autoridades competentes e, se houver dados pessoais expostos, avaliar obrigações legais de comunicação.</li>
+        <li>Conduzir uma análise pós-incidente para corrigir a causa raiz.</li>
+      </ol>
+    </section>
+
+    <section id="comparacao">
+      <h2><span class="num">10</span>Ransomware × Wiper</h2>
+      <p class="muted">As duas ameaças desta dupla compartilham a mesma técnica de base — tornar dados inacessíveis — mas divergem completamente na intenção.</p>
+      <div class="spectrum">
+        <div class="ends"><b>Extorsão</b><span>dado retido, para lucro</span></div>
+        <div class="track"><div class="marker" style="left:14%"></div></div>
+        <div class="ends" style="margin-top:.5rem;"><span>dado perdido, para sabotagem</span><b>Destruição</b></div>
+      </div>
+      <p>O ransomware quer que a vítima <em>pague</em>; por isso, na maioria dos casos, existe uma chave de descriptografia funcional — destruir os dados permanentemente eliminaria o incentivo ao pagamento. Veja a ameaça irmã desta dupla, o <a href="wiper.html">Wiper</a>, projetado para o extremo oposto do espectro.</p>
+    </section>
+
+    <section id="referencias">
+      <h2><span class="num">11</span>Referências</h2>
+      <ul class="refs">
+        <li><span class="src">MITRE ATT&CK</span><span>Data Encrypted for Impact (T1486). <a href="https://attack.mitre.org/techniques/T1486/" target="_blank" rel="noopener">attack.mitre.org/techniques/T1486</a></span></li>
+        <li><span class="src">CISA</span><span>#StopRansomware — guias e alertas de ransomware. <a href="https://www.cisa.gov/stopransomware" target="_blank" rel="noopener">cisa.gov/stopransomware</a></span></li>
+        <li><span class="src">CISA</span><span>Alerta e cronologia pública sobre o incidente da Colonial Pipeline (2021).</span></li>
+        <li><span class="src">NIST</span><span>SP 1800-11 — Data Integrity: Recovering from Ransomware and Other Destructive Events.</span></li>
+        <li><span class="src">NIST CSRC</span><span>Glossário — definição de Ransomware. <a href="https://csrc.nist.gov/glossary/term/ransomware" target="_blank" rel="noopener">csrc.nist.gov/glossary</a></span></li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap foot-row">
+    <span>Atlas de Ameaças Cibernéticas · Dupla 03 · Ransomware &amp; Wiper</span>
+    <span><a href="wiper.html">Ver ficha do Wiper →</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

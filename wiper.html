@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-threat="wiper">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiper — Atlas de Ameaças Cibernéticas | Dupla 03</title>
+<meta name="description" content="Ficha técnica sobre Wiper: histórico, funcionamento, vetores, impactos, detecção, caso real, prevenção e resposta a incidente.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div>
+      <a href="../index.html">← Atlas de Ameaças Cibernéticas</a>
+      <span class="sep">/</span> Dupla 03
+    </div>
+    <div class="siblings">
+      <a class="pill" href="ransomware.html">← Ransomware</a>
+      <a class="pill is-current" href="wiper.html">Wiper</a>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">FICHA DE AMEAÇA · MALWARE DE IMPACTO</p>
+    <h1>Wiper</h1>
+    <p class="lede">Malware projetado para destruir dados e sistemas de forma irreversível — sem intenção de resgate, com objetivo de sabotagem em vez de lucro.</p>
+
+    <div class="factsheet">
+      <dl>
+        <dt>Categoria</dt>
+        <dd>Malware destrutivo <small>tática: Impact (MITRE ATT&CK)</small></dd>
+      </dl>
+      <dl>
+        <dt>Técnica MITRE</dt>
+        <dd class="mono">T1485 <small>Data Destruction</small></dd>
+      </dl>
+      <dl>
+        <dt>Registro relevante</dt>
+        <dd>2012 → recorrente <small>frequente em contexto geopolítico</small></dd>
+      </dl>
+      <dl>
+        <dt>Impacto CIA</dt>
+        <dd>
+          <div class="cia">
+            <div class="bar"><div class="bar-label">Confid.</div><div class="track"><div class="fill" style="width:25%"></div></div></div>
+            <div class="bar"><div class="bar-label">Integr.</div><div class="track"><div class="fill" style="width:98%"></div></div></div>
+            <div class="bar"><div class="bar-label">Disp.</div><div class="track"><div class="fill" style="width:98%"></div></div></div>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</header>
+
+<div class="dossier wrap dossier-grid">
+
+  <aside class="case-nav">
+    <h2>Seções</h2>
+    <ol>
+      <li><a href="#definicao">O que é</a></li>
+      <li><a href="#historico">Histórico</a></li>
+      <li><a href="#funcionamento">Funcionamento</a></li>
+      <li><a href="#vetor">Vetor de entrada</a></li>
+      <li><a href="#impacto">Objetivos e impacto</a></li>
+      <li><a href="#deteccao">Detecção</a></li>
+      <li><a href="#caso">Caso real</a></li>
+      <li><a href="#prevencao">Prevenção</a></li>
+      <li><a href="#resposta">Resposta a incidente</a></li>
+      <li><a href="#comparacao">Wiper × Ransomware</a></li>
+      <li><a href="#referencias">Referências</a></li>
+    </ol>
+  </aside>
+
+  <main>
+
+    <section id="definicao">
+      <h2><span class="num">01</span>O que é?</h2>
+      <p>Wiper é uma categoria de malware cujo único objetivo é destruir dados ou tornar sistemas inoperantes de forma permanente — sobrescrevendo arquivos, o registro mestre de inicialização (MBR) ou a tabela de partições. No <strong>MITRE ATT&CK</strong>, corresponde principalmente à técnica <span class="mono">T1485 – Data Destruction</span>, também sob a tática <strong>Impact</strong>.</p>
+      <p class="muted">A diferença central para o ransomware não está na técnica, e sim na intenção: não existe (ou não funciona) uma chave de recuperação. Alguns wipers, inclusive, se disfarçam de ransomware — exibindo uma nota de resgate — apenas para atrasar a percepção da vítima, sem qualquer possibilidade real de reverter o dano.</p>
+    </section>
+
+    <section id="historico">
+      <h2><span class="num">02</span>Histórico</h2>
+      <p>Um dos primeiros casos de grande escala foi o <strong>Shamoon</strong>, em agosto de 2012, contra a petrolífera saudita Saudi Aramco: cerca de 30 mil estações de trabalho tiveram seus discos sobrescritos, várias exibindo a imagem de uma bandeira americana em chamas, e a empresa precisou substituir fisicamente boa parte do parque de máquinas. Uma segunda onda (Shamoon 2/3) atingiu novamente organizações do Golfo Pérsico em 2016–2017.</p>
+      <p>O caso mais estudado é o <strong>NotPetya</strong>, de junho de 2017: disfarçado de uma variante do ransomware Petya, exigia pagamento, mas sua rotina de "descriptografia" era inutilizável — classificando-o tecnicamente como wiper. Propagou-se por meio de uma atualização comprometida de um software de contabilidade ucraniano amplamente usado (M.E.Doc), somada ao exploit EternalBlue e à ferramenta Mimikatz para se espalhar lateralmente. Atingiu empresas globais como Maersk, Merck e FedEx/TNT Express, com prejuízo estimado acima de 10 bilhões de dólares no total, sendo atribuído por governos ocidentais a atores ligados ao Estado russo.</p>
+      <p>Mais recentemente, no contexto da invasão da Ucrânia em 2022, famílias como <strong>WhisperGate</strong> e <strong>HermeticWiper</strong> foram usadas contra organizações ucranianas pouco antes e durante o conflito, reforçando o padrão de uso de wipers como ferramenta de sabotagem em disputas geopolíticas.</p>
+    </section>
+
+    <section id="funcionamento">
+      <h2><span class="num">03</span>Como funciona</h2>
+      <p>Diferente do ransomware, um wiper não precisa negociar nada — seu ciclo de vida é mais curto e direto ao ponto de destruição:</p>
+      <figure>
+        <div class="diagram-frame">
+          <svg viewBox="0 0 920 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="wp-diag-title">
+            <title id="wp-diag-title">Etapas de um ataque de wiper, do acesso inicial à destruição irreversível</title>
+            <line x1="60" y1="60" x2="860" y2="60" stroke="#343747" stroke-width="2"/>
+            <g font-family="IBM Plex Sans, sans-serif" font-size="12.5" fill="#e9e7e2">
+              <g>
+                <circle cx="60" cy="60" r="9" fill="#20222c" stroke="#5aa9dd" stroke-width="2.5"/>
+                <text x="60" y="90" text-anchor="middle">Acesso</text>
+                <text x="60" y="106" text-anchor="middle">inicial</text>
+              </g>
+              <g>
+                <circle cx="255" cy="60" r="9" fill="#20222c" stroke="#5aa9dd" stroke-width="2.5"/>
+                <text x="255" y="90" text-anchor="middle">Execução</text>
+                <text x="255" y="106" text-anchor="middle">silenciosa</text>
+              </g>
+              <g>
+                <circle cx="470" cy="60" r="9" fill="#20222c" stroke="#5aa9dd" stroke-width="2.5"/>
+                <text x="470" y="90" text-anchor="middle">Desativa</text>
+                <text x="470" y="106" text-anchor="middle">recuperação</text>
+              </g>
+              <g>
+                <circle cx="685" cy="60" r="9" fill="#20222c" stroke="#5aa9dd" stroke-width="2.5"/>
+                <text x="685" y="90" text-anchor="middle">Sobrescrita</text>
+                <text x="685" y="106" text-anchor="middle">de dados</text>
+              </g>
+              <g>
+                <circle cx="860" cy="60" r="10" fill="#162530" stroke="#5aa9dd" stroke-width="3"/>
+                <text x="860" y="90" text-anchor="middle" font-weight="600">Impacto</text>
+                <text x="860" y="106" text-anchor="middle" font-weight="600">irreversível</text>
+              </g>
+            </g>
+            <text x="60" y="150" font-family="IBM Plex Mono, monospace" font-size="11" fill="#a7a9b6">spear phishing · supply chain</text>
+            <text x="860" y="150" font-family="IBM Plex Mono, monospace" font-size="11" fill="#a7a9b6" text-anchor="end">T1485 · sem chave</text>
+          </svg>
+        </div>
+        <figcaption>Fig. 1 — Ciclo de vida típico de um ataque de wiper, sem etapa de negociação.</figcaption>
+      </figure>
+      <ol class="steps">
+        <li><strong>Acesso inicial</strong>: spear phishing, exploração de servidores expostos ou, em casos notórios, comprometimento da cadeia de suprimentos de software (como a atualização maliciosa usada no NotPetya).</li>
+        <li><strong>Execução silenciosa</strong>: o malware pode permanecer inativo até um gatilho específico (data, comando remoto) para maximizar o alcance antes de agir.</li>
+        <li><strong>Desativação dos mecanismos de recuperação</strong>: exclusão de cópias de sombra e sobrescrita do MBR/tabela de partições, impedindo qualquer boot ou restauração local.</li>
+        <li><strong>Sobrescrita ou corrupção de dados</strong>: arquivos, discos ou partições inteiras são preenchidos com dados aleatórios ou lixo — técnica <span class="mono">T1485</span>.</li>
+        <li><strong>Impacto irreversível</strong>: os sistemas ficam inoperantes; sem backups externos, a recuperação forense é limitada ou impossível.</li>
+      </ol>
+    </section>
+
+    <section id="vetor">
+      <h2><span class="num">04</span>Vetor de comprometimento</h2>
+      <ul>
+        <li>Phishing direcionado (spear phishing) contra alvos específicos, comum em campanhas com motivação política.</li>
+        <li>Comprometimento de atualizações de software legítimo (ataque à cadeia de suprimentos), como no caso do M.E.Doc/NotPetya.</li>
+        <li>Exploração de vulnerabilidades em servidores expostos à internet.</li>
+        <li>Uso de credenciais administrativas comprometidas para obter alcance amplo antes de disparar a destruição.</li>
+        <li>Abuso de ferramentas legítimas já presentes no sistema (<em>living off the land</em>) para se espalhar sem levantar alarmes antes da fase destrutiva.</li>
+      </ul>
+    </section>
+
+    <section id="impacto">
+      <h2><span class="num">05</span>Objetivos e impacto</h2>
+      <p>O objetivo é <strong>sabotagem</strong>, não lucro — frequentemente associado a conflitos geopolíticos, retaliação ou interrupção deliberada de operações de um adversário.</p>
+      <ul class="card-list">
+        <li><b>Disponibilidade — crítico</b>Sistemas ficam totalmente inoperantes, muitas vezes exigindo reconstrução completa da infraestrutura de TI.</li>
+        <li><b>Integridade — crítico</b>Dados são sobrescritos ou corrompidos de forma permanente, sem possibilidade de reversão via chave.</li>
+        <li><b>Confidencialidade — geralmente secundário</b>O objetivo não é roubar informação, embora o acesso obtido antes do ataque possa, em alguns casos, também ser usado para exfiltração.</li>
+      </ul>
+    </section>
+
+    <section id="deteccao">
+      <h2><span class="num">06</span>Indicadores e sinais de detecção</h2>
+      <ul>
+        <li>Sobrescrita em massa de arquivos <strong>sem</strong> geração de nota de resgate correspondente.</li>
+        <li>Modificação direta do MBR ou da tabela de partições, causando falhas de boot em múltiplas máquinas ao mesmo tempo.</li>
+        <li>Uso fora do padrão de utilitários legítimos de apagamento seguro (ex.: <span class="mono">SDelete</span>) em várias estações simultaneamente.</li>
+        <li>Execução alinhada a um gatilho específico (data, hora ou comando remoto), sugerindo uma "bomba lógica" embutida.</li>
+        <li>Presença de uma suposta nota de resgate cuja rotina de descriptografia nunca funciona — sinal de disfarce de wiper.</li>
+        <li>Falhas de inicialização em massa logo após a distribuição de uma atualização de software de terceiros.</li>
+      </ul>
+    </section>
+
+    <section id="caso">
+      <h2><span class="num">07</span>Caso real</h2>
+      <div class="callout">
+        <span class="tag">NotPetya · 27 de junho de 2017</span>
+        <p>Disfarçado de ransomware, o NotPetya se espalhou a partir de uma atualização maliciosa do software de contabilidade ucraniano M.E.Doc, combinando o exploit EternalBlue com a ferramenta de roubo de credenciais Mimikatz para se propagar lateralmente com grande velocidade dentro de redes corporativas. A gigante do transporte marítimo <strong>Maersk</strong> precisou reconstruir praticamente toda a sua infraestrutura de TI global em poucos dias; a farmacêutica <strong>Merck</strong> e a transportadora <strong>FedEx/TNT Express</strong> também sofreram paralisações significativas, além de diversos órgãos ucranianos. Analistas de segurança (incluindo Kaspersky e ESET) constataram que a rotina de "descriptografia" do malware era estruturalmente incapaz de reverter o dano, confirmando sua natureza de wiper disfarçado — o caso é referência em reportagens investigativas amplamente citadas, como a da revista Wired sobre o incidente.</p>
+      </div>
+    </section>
+
+    <section id="prevencao">
+      <h2><span class="num">08</span>Como prevenir</h2>
+      <ul>
+        <li><strong>Backups offline e imutáveis</strong>, testados regularmente — é a defesa mais eficaz contra uma perda de dados definitiva.</li>
+        <li>Segmentação de rede rigorosa para conter a propagação lateral antes que a fase destrutiva seja disparada.</li>
+        <li>Controle e verificação de integridade de atualizações de software de terceiros (assinatura digital, canais confiáveis).</li>
+        <li>MFA e monitoramento reforçado de contas privilegiadas, alvo prioritário para obter alcance amplo na rede.</li>
+        <li>Restrição e auditoria do uso de ferramentas administrativas (PowerShell, PsExec) a cenários legítimos e registrados.</li>
+        <li>Planos de continuidade de negócio e recuperação de desastres testados e atualizados.</li>
+      </ul>
+    </section>
+
+    <section id="resposta">
+      <h2><span class="num">09</span>Como a organização deve responder</h2>
+      <ol class="steps">
+        <li>Isolar imediatamente a rede afetada para impedir a propagação lateral em andamento.</li>
+        <li>Evitar reiniciar sistemas comprometidos sem análise prévia — o reboot pode acionar rotinas destrutivas ainda pendentes.</li>
+        <li>Acionar a equipe forense para preservar evidências de disco antes de qualquer reconstrução.</li>
+        <li>Restaurar exclusivamente a partir de backups offline íntegros e verificados.</li>
+        <li>Avaliar com realismo a extensão do dano, que pode ser total e sem possibilidade de recuperação parcial.</li>
+        <li>Notificar autoridades competentes e, quando aplicável, cumprir obrigações legais (no Brasil, avaliar a LGPD se dados pessoais forem afetados).</li>
+        <li>Conduzir lições aprendidas com foco em segmentação de rede e maturidade da estratégia de backup.</li>
+      </ol>
+    </section>
+
+    <section id="comparacao">
+      <h2><span class="num">10</span>Wiper × Ransomware</h2>
+      <p class="muted">Wiper e ransomware compartilham a mesma técnica de base — tornar dados inacessíveis — mas têm intenções opostas.</p>
+      <div class="spectrum">
+        <div class="ends"><b>Extorsão</b><span>dado retido, para lucro</span></div>
+        <div class="track"><div class="marker" style="left:86%"></div></div>
+        <div class="ends" style="margin-top:.5rem;"><span>dado perdido, para sabotagem</span><b>Destruição</b></div>
+      </div>
+      <p>O wiper não quer negociar: seu "sucesso" é justamente a impossibilidade de recuperação, o que o torna, na prática, um risco mais grave do que o ransomware para a continuidade do negócio — não há pagamento que reverta o dano. Veja a ameaça irmã desta dupla, o <a href="ransomware.html">Ransomware</a>, no outro extremo do espectro.</p>
+    </section>
+
+    <section id="referencias">
+      <h2><span class="num">11</span>Referências</h2>
+      <ul class="refs">
+        <li><span class="src">MITRE ATT&CK</span><span>Data Destruction (T1485). <a href="https://attack.mitre.org/techniques/T1485/" target="_blank" rel="noopener">attack.mitre.org/techniques/T1485</a></span></li>
+        <li><span class="src">CISA</span><span>Alertas sobre malware destrutivo e recomendações de mitigação.</span></li>
+        <li><span class="src">ESET / Kaspersky</span><span>Análises técnicas públicas sobre o NotPetya (2017) e a família Shamoon.</span></li>
+        <li><span class="src">Wired</span><span>Reportagem investigativa sobre a origem e o impacto global do NotPetya.</span></li>
+        <li><span class="src">NIST CSRC</span><span>Glossário — definições relacionadas a malware destrutivo. <a href="https://csrc.nist.gov/glossary/" target="_blank" rel="noopener">csrc.nist.gov/glossary</a></span></li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap foot-row">
+    <span>Atlas de Ameaças Cibernéticas · Dupla 03 · Ransomware &amp; Wiper</span>
+    <span><a href="ransomware.html">← Ver ficha do Ransomware</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
