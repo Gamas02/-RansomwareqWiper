@@ -3,7 +3,7 @@ services:
     image: httpd:2.4
     container_name: atlas-ameacas
     ports:
-      - "8080:80"
+      - "8092:80"
     volumes:
       - ./atlas-ameacas:/usr/local/apache2/htdocs:ro
     restart: unless-stopped
