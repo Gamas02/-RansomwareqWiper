@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-threat="wiper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Desafio do Analista</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="challenge">
+
+  <h2>Desafio do Analista</h2>
+
+  <p>
+    Uma organização sofreu um incidente em que diversos computadores
+    tiveram seus arquivos destruídos. Após o ataque, os sistemas afetados
+    não conseguiam mais inicializar corretamente e não havia qualquer
+    mensagem exigindo pagamento ou oferecendo recuperação dos arquivos.
+  </p>
+
+  <p><strong>Qual hipótese melhor explica o incidente?</strong></p>
+
+  <div class="challenge-options">
+
+    <button onclick="responder('ransomware')">
+      Ransomware
+    </button>
+
+    <button onclick="responder('wiper')">
+      Wiper
+    </button>
+
+  </div>
+
+  <div id="resultado" class="challenge-result"></div>
+
+</div>
+
+<script>
+function responder(resposta) {
+
+  const resultado = document.getElementById("resultado");
+
+  if (resposta === "wiper") {
+
+    resultado.innerHTML = `
+      <div class="correct">
+        <span class="tag">✓ Hipótese correta</span>
+
+        <h3>Wiper</h3>
+
+        <p>
+          A hipótese correta é <strong>Wiper</strong>.
+        </p>
+
+        <p>
+          O principal indício é a destruição dos dados e dos sistemas
+          sem qualquer tentativa de extorsão ou solicitação de pagamento.
+          Wipers são projetados para causar destruição ou indisponibilidade
+          dos dados.
+        </p>
+      </div>
+    `;
+
+  } else {
+
+    resultado.innerHTML = `
+      <div class="incorrect">
+        <span class="tag">✕ Hipótese incorreta</span>
+
+        <h3>A resposta correta era: Wiper</h3>
+
+        <p>
+          <strong>Por que Ransomware está incorreto?</strong>
+        </p>
+
+        <p>
+          Ransomware normalmente está associado à criptografia ou bloqueio
+          de dados com o objetivo de exigir um resgate para a recuperação.
+          Neste caso, não houve qualquer exigência de pagamento ou tentativa
+          de extorsão.
+        </p>
+
+        <p>
+          <strong>Por que Wiper está correto?</strong>
+        </p>
+
+        <p>
+          O incidente apresenta características de destruição deliberada
+          dos dados e indisponibilidade dos sistemas. Esse comportamento
+          é compatível com um Wiper, cujo objetivo pode ser causar dano
+          e impedir a recuperação ou operação dos sistemas afetados.
+        </p>
+      </div>
+    `;
+  }
+
+  resultado.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+}
+</script>
+
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-row">
+        <span>Atlas de Ameaças Cibernéticas</span>
+        <span class="mono">DESAFIO 11</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
